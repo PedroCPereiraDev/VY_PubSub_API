@@ -1,15 +1,17 @@
 # INVOICE ENGINE — A proof of concept Invoice Sub/Pub
 
-This software is a proof of concept of a system where invoices are inserted via publishers, then their values are manipulated and refined by the backend, and finally they are sent via an Event Bus to all interested clients, who will receive the meaningful data already prepared.
+This software is a proof of concept of a system where invoices are inserted via publishers, then their values are manipulated and refined by the backend, and finally they are sent via an WebSockets Event Bus to all interested clients, who will receive the meaningful data already prepared.
 
-With this repository and PoC we present a demonstration of the Publisher/Subscriber pattern in C# and .NET 8, without the use of any messaging frameworks, complete with a simple and fun visual interface to make it easy to see and manipulate the number of publishers and subscribers.
+With this repository and PoC we present a demonstration of the Publisher/Subscriber pattern in C#, .NET 8 amd ASP.Net Core, without the use of any messaging frameworks, complete with a simple web interface to make it easy to see and manipulate the number of publishers and subscribers.
 
 ## Requirements
 If you want to build and run our INVOICE ENGINE yourself, it is very simple, you will need:
 
-- a Windows computer (You could also use other platforms but not natively and its use is out of this scope and not trivial)
+- a Windows, Mac or Linux computer capable of compiling and running .NET code
 
-- a modern IDE like Visual Studio 2022
+- a modern IDE like Visual Studio 2022 or other similar
+
+- a modern browser capable of WebSockets, we recomend Chrome or Chromium
 
 - free time to play with the code and application 😁
 
@@ -19,16 +21,18 @@ Once you have cloned the repository you can open the solution with your prefered
 ### Building and Running
 Once you have all the dependencies working as expected, you may build and run the application.
 
-Assuming all went well and that the code compiled without problems you should now be presented with a window with 2 buttons, one that allows you to spin up an instance of a subscriber (Invoice Viewer) and other that allows you to spin up an instance of a publisher (Invoice Reporter).
+Assuming all went well and that the code compiled without problems you should now be presented with a web page with 2 buttons, one that allows you to spin up a tabbed instance of a subscriber (Invoice Viewer) and other that allows you to spin up a tabbed instance of a publisher (Invoice Reporter).
 
-You main spin up as many instances as you desire. On the publishers, you will be able to insert a Invoice Number and Total Value, which the software will validate before fowarding the data to the subscribers. The subscribers will then receive the manipulated data and present it in a simple table.
+You main spin up as many instances as you desire. On the publishers, you will be able to insert a Invoice Number and Total Value, which the software will validate before fowarding the data to the subscribers.
 
 The subscribers will then receive the manipulated data sent by the publishers and present it in a simple table.
 
-Another action you can do is press the DISCONNECT button on the subscribers, which will unsubscribe that instance from receiving further data from the publisher. However, all other subscribers should continue to receive events.
+Another action you can do is press the UNSUBSCRIBE button on the subscribers, which will unsubscribe that instance from receiving further data from the publisher. However, all other subscribers should continue to receive events.
+
+You are also presented controls to connect to the WebSocket server and disconnect at will.
 
 ## Considerations
-Before taking on this assignment, I used this pattern professionaly when dealing with solutions that required/used, for exemple, SignalR or other similar frameworks, but had never actually created an application of this sort in pure C# code.
+Before taking on this assignment, I used this pattern professionaly when dealing with solutions that required/used, for example, SignalR or other similar frameworks, but had never actually created an application of this sort in pure C# code.
 Having completed this exercise, I believe it was a good experience and it let me brush up on the concepts of delegates, which is something I have only used very little and once in a while.
 
 At first, I thought of doing several different implementations, but while developing the application I came to realize I was over-complicating something that was simple and running away from the intended focus of the exercise.
@@ -45,10 +49,12 @@ In this section, I will be listing the improvements I would perform on this assi
 
 4) I went with a more straightfoward Dependency Injection implementation using the standard library from Microsoft. In future I could use other library or segregate the dependency injection in its own classes and methods. In this iteration, it was so simple it made sense to me that it should stay in the Program.cs
 
-5) The final improvement would be logs, specially in the exception handling block of the broker, where instead of throwing an aggregated exception, we could log the issue and keep the application alive.
+5) Althought the core parts of the business logic are covered with unit tests, I would add more, specifically regarding the Controllers logic.
+
+6) The final improvement would be more logs (although we use some in the controllers), specially in the exception handling block of the broker, where instead of throwing an aggregated exception, we could log the issue with some bigger level of detail and try to handle the situation in a way to keep the application alive.
 
 ## Feedback
-Feedback on improvement points, tips to implement the improvement list or just new ideas that can make this application better, more reliable, secure and performative are always welcome and will be discussed and iterated upon. Therefore, feel free to reach out to me. :) 
+Feedback on improvement points, tips to implement the improvement list or just new ideas that can make this application better, more reliable, secure and performative are always welcome and will be discussed and iterated upon. Therefore, feel free to reach out to me. 😊 
 
 ## Maintainers
 | Name                | Github            | Role                               |

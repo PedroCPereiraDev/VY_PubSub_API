@@ -1,36 +1,45 @@
+﻿using API.EventHandling.Interface;
+using API.EventHandling;
 
-namespace API
+namespace API;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add services to the container.
+
+        builder.Services.AddControllers();
+
+        builder.Services
+            .AddSingleton<IEventInvoiceBroker, EventInvoiceBroker>()
+            .AddSingleton<IEventInvoiceBrokerPublisher>(x => x.GetRequiredService<IEventInvoiceBroker>())
+            .AddSingleton<IEventInvoiceBrokerSubscriber>(x => x.GetRequiredService<IEventInvoiceBroker>());
+
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+
+        app.UseHttpsRedirection();
+
+        var webSocketOptions = new WebSocketOptions
         {
-            var builder = WebApplication.CreateBuilder(args);
+            KeepAliveInterval = TimeSpan.FromMinutes(2)
+        };
 
-            // Add services to the container.
+        app.UseWebSockets(webSocketOptions);        
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        app.UseAuthorization();
 
-            var app = builder.Build();
+        app.MapControllers();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+        app.UseWebSockets();
 
-            app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
+        app.Run();
     }
 }
